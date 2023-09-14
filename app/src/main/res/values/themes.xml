@@ -1,0 +1,10 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Mimic3TTSEngineWrapper" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/colorText</item>
+    </style>
+
+    <style name="Theme.Mimic3TTSEngineWrapper" parent="Base.Theme.Mimic3TTSEngineWrapper" />
+</resources>

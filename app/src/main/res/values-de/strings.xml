@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mimic3 TTS Engine Wrapper</string>
+    <string name="btn_speak_text">Sprechen</string>
+    <string name="lbl_test_text">Gebe Text ein um deine Einstellungen zu testen</string>
+    <string name="lbl_speed_text">Sprechgeschwindigkeit</string>
+    <string name="lbl_pitch_text">Stimmhöhe</string>
+    <string name="lbl_language">Sprache</string>
+    <string name="lbl_voice">Stimme</string>
+    <string name="lbl_speaker">Sprecher</string>
+    <string name="lbl_settings">Einstellungen</string>
+    <string name="lbl_error">Error:</string>
+    <string name="lbl_error_server_address_missing">Du musst noch die Serveradresse einstellen</string>
+    <string name="ok">Ok</string>
+    <string name="lbl_audio_volatility">Audio-Schwankung</string>
+    <string name="lbl_phoneme_volatility">Phonemvariabilität</string>
+    <string name="lbl_audio_volatility_tooltip">
+        Der Anteil des Rauschens, der dem generierten Audio hinzugefügt wird. Kann dazu beitragen, Audio-Artefakte aus dem Stimmenmodell zu maskieren. Modelle mit mehreren Sprechern klingen in der Regel besser mit einem geringeren Rauschanteil als Modelle mit einem Sprecher.
+    </string>
+    <string name="lbl_phoneme_volatility_tooltip">
+        Die Menge an Rauschen, die zur Erzeugung von Phonemdauern verwendet wird. Ermöglicht eine variable Sprechkadenz, wobei ein größerer Wert eine größere Variabilität bedeutet. Modelle mit mehreren Sprechern klingen tendenziell besser mit einer geringeren Phonemvariabilität als Modelle mit einem Sprecher.
+    </string>
+
+    <string name="cache">Zwischenspeicher</string>
+    <string name="cache_size">Zwischenspeichergröße in GB</string>
+    <string name="cache_size_description">Der Zwischenspeicher speichert Ergebnisse von Sprachanfragen an den Server.</string>
+    <string name="cache_activate">Zwischenspeicher verwenden</string>
+    <string name="clear_cache">Zwischenspeicher leeren</string>
+    <string name="clear_cache_description">Hier klicken um den Zwischenspeicher zu leeren</string>
+
+    <string name="general_header">Generell</string>
+    <string name="server_address">Server Adresse</string>
+    <string name="server_address_summary">Die Adresse des TTS Servers, inklusive https://</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    <string name="service_description">Ein Wrapper Service für den Mimic3 Webserver</string>
+    <string name="service_name">Mimic3 TTS Engine Wrapper Web Service</string>
+    <string name="tts_server_error">Probleme mit der Serververbindung, versichere dich, dass eine URL in den Einstellungen hinterlegt ist und diese auch korrekt ist</string>
+
+    <string name="default_no_connection">Keine Verbindung</string>
+    <string name="default_stupid">Doof</string>
+
+    <string name="cache_reset_successful">Zwischenspeicherlöschung erfolgreich.</string>
+    <string name="cache_reset_failed">Zwischenspeicherlöschung ist fehlgeschlagen, der Service läuft nicht.</string>
+</resources>

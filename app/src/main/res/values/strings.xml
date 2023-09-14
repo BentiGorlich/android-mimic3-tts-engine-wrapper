@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Mimic3 TTS Engine Wrapper</string>
+    <string name="btn_speak_text">Speak</string>
+    <string name="lbl_test_text">Input Text to test your settings</string>
+    <string name="lbl_speed_text">Speak speed</string>
+    <string name="lbl_pitch_text">Speak pitch</string>
+    <string name="lbl_language">Language</string>
+    <string name="lbl_voice">Voice</string>
+    <string name="lbl_speaker">Speaker</string>
+    <string name="lbl_settings">Settings</string>
+    <string name="lbl_error">Error:</string>
+    <string name="lbl_error_server_address_missing">You have to set your server address in the settings</string>
+    <string name="ok">Ok</string>
+    <string name="lbl_audio_volatility">Audio Volatility</string>
+    <string name="lbl_phoneme_volatility">Phoneme Volatility</string>
+    <string name="lbl_audio_volatility_tooltip">
+        The amount of noise added to the generated audio. Can help mask audio artifacts from the voice model. Multi-speaker models tend to sound better with a lower amount of noise than single speaker models.
+    </string>
+    <string name="lbl_phoneme_volatility_tooltip">
+        The amount of noise used to generate phoneme durations. Allows for variable speaking cadance, with a value closer to 1 being more variable. Multi-speaker models tend to sound better with a lower amount of phoneme variability than single speaker models.
+    </string>
+
+    <string name="cache">Cache</string>
+    <string name="cache_size">Cache Size in GB</string>
+    <string name="cache_size_description">The cache saves the result of speech requests to the server.</string>
+    <string name="cache_activate">Use Cache</string>
+    <string name="clear_cache">Clear the cache</string>
+    <string name="clear_cache_description">Click to clear the cache</string>
+
+    <string name="general_header">General</string>
+    <string name="server_address">Server Address</string>
+    <string name="server_address_summary">The address of the TTS server, including https://</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="service_description">A wrapper service for a mimic 3 webserver</string>
+    <string name="service_name">Mimic3 TTS Engine Wrapper Web Service</string>
+    <string name="tts_server_error">There is an error with the server connection. Make sure that you entered a URL in the settings and that it is correct.</string>
+
+    <string name="default_no_connection">No connection</string>
+    <string name="default_stupid">Stupid</string>
+
+    <string name="cache_reset_successful">Cache reset was successful.</string>
+    <string name="cache_reset_failed">Cache reset failed, because the service is offline.</string>
+</resources>

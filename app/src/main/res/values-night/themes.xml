@@ -1,0 +1,8 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Mimic3TTSEngineWrapper" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <item name="colorPrimary">@color/primaryDark</item>
+        <item name="colorOnPrimary">@color/colorTextDark</item>
+    </style>
+</resources>
