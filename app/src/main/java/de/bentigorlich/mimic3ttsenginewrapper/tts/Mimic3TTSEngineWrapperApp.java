@@ -1,4 +1,4 @@
-package de.bentigorlich.mimic3ttsenginewrapper;
+package de.bentigorlich.mimic3ttsenginewrapper.tts;
 
 import android.app.Application;
 import android.content.Context;

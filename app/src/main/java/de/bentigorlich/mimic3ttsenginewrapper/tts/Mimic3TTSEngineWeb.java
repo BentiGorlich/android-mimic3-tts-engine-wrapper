@@ -1,4 +1,4 @@
-package de.bentigorlich.mimic3ttsenginewrapper;
+package de.bentigorlich.mimic3ttsenginewrapper.tts;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,9 +48,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import de.bentigorlich.mimic3ttsenginewrapper.entities.CacheEntry;
+import de.bentigorlich.mimic3ttsenginewrapper.entities.MimicVoice;
+import de.bentigorlich.mimic3ttsenginewrapper.util.JsonFormatter;
 
 public class Mimic3TTSEngineWeb extends TextToSpeechService {
 
@@ -116,8 +121,21 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
     private final Timer cacheFlushInterval;
 
     public Mimic3TTSEngineWeb() {
-        _Logger = Logger.getLogger("de.bentigorlich.mimic3ttsenginewrapper.Mimic3TTSEngineWeb");
+        _Logger = Logger.getLogger("de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWeb");
         LogManager.getLogManager().addLogger(_Logger);
+
+        String cacheDir = Mimic3TTSEngineWrapperApp.getStorageContext().getDataDir().getAbsolutePath();
+        try {
+            FileHandler fileHandler = new FileHandler(cacheDir + "/tts_%g.log", 1024 * 1024, 1, true);
+            fileHandler.setFormatter(new JsonFormatter());
+            _Logger.addHandler(fileHandler);
+        } catch (IOException e) {
+            _Logger.severe("IOException while adding filehandler to logger: " + e.getMessage());
+            for(StackTraceElement el : e.getStackTrace()) {
+                _Logger.warning("at: " + el.toString());
+            }
+        }
+
         _Logger.info("Instantiated Mimic3TTSEngineWeb");
 
         String[] languages = Locale.getISOLanguages();
@@ -128,6 +146,18 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
             LocaleMap.put(locale.getISO3Language(), locale);
             if(!locale.getISO3Country().equals(""))
                 CountryMap.put(locale.getISO3Country(), locale);
+        }
+
+        try {
+            buildCache();
+            if(Voices != null && Voices.size() > 0) {
+                FetchVoices = false;
+            }
+        } catch (Exception ex) {
+            _Logger.severe("An unhandled exception occurred: " + ex.getClass().getName() + ": " + ex.getMessage());
+            for(StackTraceElement el : ex.getStackTrace()) {
+                _Logger.warning("at: " + el.toString());
+            }
         }
 
         cacheFlushInterval = new Timer();
@@ -157,18 +187,6 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
             String address = intent.getStringExtra("server_address");
             if (address != null && !address.equals(""))
                 s_ServerAddress = address;
-        }
-
-        try {
-            buildCache();
-            if(Voices != null && Voices.size() > 0) {
-                FetchVoices = false;
-            }
-        } catch (Exception ex) {
-            _Logger.severe("An unhandled exception occurred: " + ex.getClass().getName() + ": " + ex.getMessage());
-            for(StackTraceElement el : ex.getStackTrace()) {
-                _Logger.warning("at: " + el.toString());
-            }
         }
         T = new Thread(this::main);
         T.start();
@@ -229,7 +247,7 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
 
     private void loadVoices() {
         List<MimicVoice> voices = new ArrayList<>();
-        if(s_ServerAddress != null) {
+        if(s_ServerAddress != null && !s_ServerAddress.equals("") && !s_ServerAddress.equals("https://")) {
             String slash = "";
             if (!s_ServerAddress.endsWith("/"))
                 slash = "/";

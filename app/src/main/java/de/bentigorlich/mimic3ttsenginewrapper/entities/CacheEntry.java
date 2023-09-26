@@ -1,4 +1,4 @@
-package de.bentigorlich.mimic3ttsenginewrapper;
+package de.bentigorlich.mimic3ttsenginewrapper.entities;
 
 import androidx.annotation.NonNull;
 

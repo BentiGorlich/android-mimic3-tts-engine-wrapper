@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".Mimic3TTSEngineWrapperApp"
+        android:name=".tts.Mimic3TTSEngineWrapperApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,7 +16,10 @@
         android:theme="@style/Theme.Mimic3TTSEngineWrapper"
         tools:targetApi="31">
         <activity
-            android:name=".CheckTTSDataActivity"
+            android:name=".activities.LogActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CheckTTSDataActivity"
             android:exported="true"
             android:theme="@style/Theme.Mimic3TTSEngineWrapper">
             <intent-filter>
@@ -24,26 +27,29 @@
                 <action android:name="android.speech.tts.engine.GET_SAMPLE_TEXT" />
                 <action android:name="android.speech.tts.engine.INSTALL_TTS_DATA" />
                 <action android:name="android.speech.tts.engine.CONFIGURE_ENGINE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings"
             android:theme="@style/Theme.Mimic3TTSEngineWrapper" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <action android:name="android.speech.tts.engine.CONFIGURE_ENGINE" />
             </intent-filter>
         </activity>
 
         <service
-            android:name=".Mimic3TTSEngineWeb"
+            android:name=".tts.Mimic3TTSEngineWeb"
             android:description="@string/service_description"
             android:directBootAware="true"
             android:enabled="true"
@@ -51,6 +57,7 @@
             android:label="@string/service_name">
             <intent-filter>
                 <action android:name="android.intent.action.TTS_SERVICE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 

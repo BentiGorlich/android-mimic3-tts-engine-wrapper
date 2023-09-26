@@ -1,4 +1,4 @@
-package de.bentigorlich.mimic3ttsenginewrapper;
+package de.bentigorlich.mimic3ttsenginewrapper.tts;
 
 import android.speech.tts.SynthesisCallback;
 import android.speech.tts.SynthesisRequest;
@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+
+import de.bentigorlich.mimic3ttsenginewrapper.entities.MimicVoice;
 
 public class Mimic3TTSEngine extends TextToSpeechService {
 

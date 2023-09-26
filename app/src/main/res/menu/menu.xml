@@ -8,4 +8,10 @@
         android:icon="@android:drawable/ic_menu_manage"
         android:onClick="onMenuItemClick"
         android:title="@string/lbl_settings" />
+    <item
+        android:id="@+id/menu_logs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="@string/lbl_logview"
+        android:onClick="onMenuItemClick" />
 </menu>

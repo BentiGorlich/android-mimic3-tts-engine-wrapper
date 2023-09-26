@@ -1,4 +1,4 @@
-package de.bentigorlich.mimic3ttsenginewrapper;
+package de.bentigorlich.mimic3ttsenginewrapper.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +12,9 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
+import de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWeb;
+import de.bentigorlich.mimic3ttsenginewrapper.entities.MimicVoice;
 
 public class CheckTTSDataActivity extends Activity {
 

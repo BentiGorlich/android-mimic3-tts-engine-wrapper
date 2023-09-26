@@ -41,4 +41,7 @@
 
     <string name="cache_reset_successful">Zwischenspeicherlöschung erfolgreich.</string>
     <string name="cache_reset_failed">Zwischenspeicherlöschung ist fehlgeschlagen, der Service läuft nicht.</string>
+
+    <string name="lbl_logview">Logs</string>
+    <string name="lbl_delete_logs">Lösche Logs</string>
 </resources>

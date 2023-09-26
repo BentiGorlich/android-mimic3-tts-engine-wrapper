@@ -7,4 +7,6 @@
     <color name="error">#DF3D3D</color>
     <color name="colorText">#1B1B1B</color>
     <color name="colorTextDark">#F0F0F0</color>
+    <color name="colorTextWarning">#FFD500</color>
+    <color name="colorTextSevere">#FF4800</color>
 </resources>

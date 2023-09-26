@@ -1,4 +1,4 @@
-package de.bentigorlich.mimic3ttsenginewrapper;
+package de.bentigorlich.mimic3ttsenginewrapper.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +9,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWeb;
+import de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWrapperApp;
+import de.bentigorlich.mimic3ttsenginewrapper.R;
 
 public class SettingsActivity extends AppCompatActivity implements Mimic3TTSEngineWeb.OnErrorListener, Preference.OnPreferenceChangeListener {
 

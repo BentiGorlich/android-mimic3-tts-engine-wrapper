@@ -1,4 +1,4 @@
-package de.bentigorlich.mimic3ttsenginewrapper;
+package de.bentigorlich.mimic3ttsenginewrapper.tts;
 
 import android.media.AudioAttributes;
 import android.media.AudioFormat;

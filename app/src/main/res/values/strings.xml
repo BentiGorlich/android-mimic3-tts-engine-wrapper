@@ -40,4 +40,7 @@
 
     <string name="cache_reset_successful">Cache reset was successful.</string>
     <string name="cache_reset_failed">Cache reset failed, because the service is offline.</string>
+
+    <string name="lbl_logview">Logs</string>
+    <string name="lbl_delete_logs">Delete Logs</string>
 </resources>

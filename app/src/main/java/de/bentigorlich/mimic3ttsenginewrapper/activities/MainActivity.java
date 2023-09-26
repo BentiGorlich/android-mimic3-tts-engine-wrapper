@@ -1,13 +1,13 @@
-package de.bentigorlich.mimic3ttsenginewrapper;
+package de.bentigorlich.mimic3ttsenginewrapper.activities;
 
-import static de.bentigorlich.mimic3ttsenginewrapper.Mimic3TTSEngineWrapperApp.PREF_AUDIO_VOLATILITY;
-import static de.bentigorlich.mimic3ttsenginewrapper.Mimic3TTSEngineWrapperApp.PREF_CACHE_ACTIVATE;
-import static de.bentigorlich.mimic3ttsenginewrapper.Mimic3TTSEngineWrapperApp.PREF_LANGUAGE;
-import static de.bentigorlich.mimic3ttsenginewrapper.Mimic3TTSEngineWrapperApp.PREF_PHONEME_VOLATILITY;
-import static de.bentigorlich.mimic3ttsenginewrapper.Mimic3TTSEngineWrapperApp.PREF_SERVER_ADDRESS;
-import static de.bentigorlich.mimic3ttsenginewrapper.Mimic3TTSEngineWrapperApp.PREF_SPEAKER;
-import static de.bentigorlich.mimic3ttsenginewrapper.Mimic3TTSEngineWrapperApp.PREF_SPEED;
-import static de.bentigorlich.mimic3ttsenginewrapper.Mimic3TTSEngineWrapperApp.PREF_VOICE;
+import static de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWrapperApp.PREF_AUDIO_VOLATILITY;
+import static de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWrapperApp.PREF_CACHE_ACTIVATE;
+import static de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWrapperApp.PREF_LANGUAGE;
+import static de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWrapperApp.PREF_PHONEME_VOLATILITY;
+import static de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWrapperApp.PREF_SERVER_ADDRESS;
+import static de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWrapperApp.PREF_SPEAKER;
+import static de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWrapperApp.PREF_SPEED;
+import static de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWrapperApp.PREF_VOICE;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,13 +27,22 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
+import de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWeb;
+import de.bentigorlich.mimic3ttsenginewrapper.tts.Mimic3TTSEngineWrapperApp;
+import de.bentigorlich.mimic3ttsenginewrapper.entities.MimicVoice;
+import de.bentigorlich.mimic3ttsenginewrapper.R;
+import de.bentigorlich.mimic3ttsenginewrapper.tts.SynthesisListener;
+import de.bentigorlich.mimic3ttsenginewrapper.util.JsonFormatter;
 
 public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,
         AdapterView.OnItemSelectedListener, View.OnClickListener, Mimic3TTSEngineWeb.OnVoicesLoadedListener,
@@ -55,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     public MainActivity()  {
         _Logger = Logger.getLogger(this.getClass().toString());
         LogManager.getLogManager().addLogger(_Logger);
+
     }
 
     @Override
@@ -63,6 +73,18 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
         setSupportActionBar(findViewById(R.id.toolbar));
         setContentView(R.layout.activity_main);
+
+        String cacheDir = getDataDir().getAbsolutePath();
+        try {
+            FileHandler fileHandler = new FileHandler(cacheDir + "/main_%g.log", 1024 * 1024, 1, true);
+            fileHandler.setFormatter(new JsonFormatter());
+            _Logger.addHandler(fileHandler);
+        } catch (IOException e) {
+            _Logger.severe("IOException while adding filehandler to logger: " + e.getMessage());
+            for(StackTraceElement el : e.getStackTrace()) {
+                _Logger.warning("at: " + el.toString());
+            }
+        }
 
         SharedPreferences = PreferenceManager.getDefaultSharedPreferences(Mimic3TTSEngineWrapperApp.getStorageContext());
         SharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -76,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         Mimic3TTSEngineWeb.s_ServerAddress = SharedPreferences.getString(PREF_SERVER_ADDRESS, "");
         Mimic3TTSEngineWeb.addLoadedListener(this);
         if (Mimic3TTSEngineWeb.s_RunningService == null) {
-            Intent startIntent = new Intent(MainActivity.this, de.bentigorlich.mimic3ttsenginewrapper.Mimic3TTSEngineWeb.class);
+            Intent startIntent = new Intent(MainActivity.this, Mimic3TTSEngineWeb.class);
             startIntent.putExtra(PREF_SERVER_ADDRESS, Mimic3TTSEngineWeb.s_ServerAddress);
             startService(startIntent);
         } else {
@@ -280,6 +302,8 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     public void onMenuItemClick(@NonNull MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.menu_settings) {
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        } else if (menuItem.getItemId() == R.id.menu_logs) {
+            startActivity(new Intent(MainActivity.this, LogActivity.class));
         }
     }
 
