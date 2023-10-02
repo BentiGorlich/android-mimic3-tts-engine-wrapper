@@ -473,6 +473,7 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
             _Logger.severe("Malformed server url: " + ex.getMessage());
             ex.printStackTrace();
             synthesisCallback.error();
+            synthesisCallback.done();
         } catch (IOException ex) {
             _Logger.severe("Connection error: " + ex.getMessage());
             ex.printStackTrace();
@@ -499,6 +500,7 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
                         in.close();
                     } catch (IOException ex2) {
                         synthesisCallback.error();
+                        synthesisCallback.done();
                         _Logger.severe("Cache error loading default_no_connection: " + ex2.getMessage());
                         ex.printStackTrace();
                         for (StackTraceElement el : ex.getStackTrace()) {
@@ -507,10 +509,12 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
                     }
                 } else {
                     synthesisCallback.error();
+                    synthesisCallback.done();
                     _Logger.severe("default_no_connection was in cache, but file doesn't exist");
                 }
             } else {
                 synthesisCallback.error();
+                synthesisCallback.done();
                 _Logger.severe("default_no_connection was not in cache");
             }
         }
@@ -522,15 +526,19 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
             try {
                 key = Mimic3TTSEngineWrapperApp.getSha256Hex(text);
             } catch (NoSuchAlgorithmException e) {
+                _Logger.severe("sha256 is not supported, should never happen...");
                 synthesisCallback.error();
+                synthesisCallback.done();
                 return;
             }
         } else {
             key = specialKey;
         }
         File cacheFile = new File(Mimic3TTSEngineWrapperApp.getStorageContext().getCacheDir(), key);
-        if(!cacheFile.exists())
+        if(!cacheFile.exists()) {
+            _Logger.severe("Should synthesize from cache, but there is no cache file...");
             throw new FileNotFoundException(key);
+        }
 
         _Logger.info("Synthesizing text with cache: " + text);
         try {
@@ -550,6 +558,7 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
                 _Logger.warning("at " + el.toString());
             }
             synthesisCallback.error();
+            synthesisCallback.done();
         }
     }
 
