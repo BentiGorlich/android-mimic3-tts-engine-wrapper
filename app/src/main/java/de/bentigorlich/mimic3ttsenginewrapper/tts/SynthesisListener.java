@@ -21,11 +21,17 @@ public class SynthesisListener implements SynthesisCallback {
     int ChannelCount;
     ByteArrayOutputStream AudioBuffer = new ByteArrayOutputStream();
     Logger _Logger;
+    Runnable OnDone = null;
 
     public SynthesisListener(boolean playOnFinish) {
         _Logger = Logger.getLogger(this.getClass().toString());
         LogManager.getLogManager().addLogger(_Logger);
         PlayOnFinish = playOnFinish;
+    }
+
+    public SynthesisListener(boolean playOnFinish, Runnable onDone) {
+        this(playOnFinish);
+        OnDone = onDone;
     }
 
     @Override
@@ -56,6 +62,10 @@ public class SynthesisListener implements SynthesisCallback {
 
     @Override
     public int done() {
+        if(OnDone != null) {
+            OnDone.run();
+        }
+
         if(!PlayOnFinish) {
             _Logger.info("Synthesis done");
             return 0;

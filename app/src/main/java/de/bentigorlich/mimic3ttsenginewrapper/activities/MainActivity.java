@@ -217,7 +217,8 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
             if(SelectedSpeaker != null && !SelectedSpeaker.equals(""))
                 voice += "#" + SelectedSpeaker;
             for(Map.Entry<String, String> s : defaultStrings.entrySet()) {
-                Mimic3TTSEngineWeb.s_RunningService.dispatchSynthesisRequest(s.getValue(), voice, SpeechSpeed, new SynthesisListener(false), s.getKey());
+                SynthesisListener listener = new SynthesisListener(false, () -> Mimic3TTSEngineWeb.s_RunningService.triggerSaveCache());
+                Mimic3TTSEngineWeb.s_RunningService.dispatchSynthesisRequest(s.getValue(), voice, SpeechSpeed, listener, s.getKey());
             }
         }
     }

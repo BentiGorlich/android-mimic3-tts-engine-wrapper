@@ -59,7 +59,6 @@ import de.bentigorlich.mimic3ttsenginewrapper.util.JsonFormatter;
 
 public class Mimic3TTSEngineWeb extends TextToSpeechService {
 
-
     public interface OnVoicesLoadedListener {
         void onVoicesLoaded(List<MimicVoice> voices);
     }
@@ -95,7 +94,8 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
     private final Logger _Logger;
     private Thread T;
     private boolean Running;
-    private boolean FetchVoices = false;
+    private boolean FetchVoices = true;
+    private boolean SaveCache = false;
 
     private long MaxCacheSizeInB = 2L * 1024 * 1024 * 1024;
     private float MaxCacheSizeInGB = 2;
@@ -182,7 +182,6 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
             _Logger.info("got action: " + intent.getAction());
         s_RunningService = this;
         Running = true;
-        FetchVoices = true;
         if(intent != null) {
             String address = intent.getStringExtra("server_address");
             if (address != null && !address.equals(""))
@@ -230,6 +229,9 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
                 } else if (SynthesisRequest) {
                     synthesizeText(SynthesisText, SynthesisVoice, SynthesisSpeechRate, Callback, SynthesisSpecialKey);
                     SynthesisRequest = false;
+                } else if (SaveCache) {
+                    saveCache();
+                    SaveCache = false;
                 } else {
                     try {
                         Thread.sleep(100);
@@ -438,7 +440,7 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             try {
-                byte[] outputBuffer = text.getBytes(StandardCharsets.UTF_8);
+                byte[] outputBuffer = text.trim().getBytes(StandardCharsets.UTF_8);
                 conn.setRequestMethod("POST");
                 conn.setDoOutput(true);
                 conn.setFixedLengthStreamingMode(outputBuffer.length);
@@ -450,18 +452,27 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
                 String message = conn.getResponseMessage();
                 InputStream in = new BufferedInputStream(conn.getInputStream());
                 int nRead;
-                byte[] data = new byte[16384];
+                int ttsMaxLength = TextToSpeech.getMaxSpeechInputLength();
+                byte[] data = new byte[ttsMaxLength];
                 ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
 
                 _Logger.info("Got raw data");
                 while ((nRead = in.read(data, 0, data.length)) != -1) {
-                    synthesisCallback.audioAvailable(data, 0, nRead);
                     byteBuffer.write(data, 0, nRead);
                 }
                 in.close();
-                _Logger.info("Got audio");
-                synthesisCallback.done();
+
                 byte[] completeData = byteBuffer.toByteArray();
+                _Logger.info("Got audio");
+                for (int i = 0; i<completeData.length/ttsMaxLength; i++) {
+                    int start = i * ttsMaxLength;
+                    int end = start + ttsMaxLength;
+                    if(completeData.length < end)
+                        end = completeData.length;
+                    synthesisCallback.audioAvailable(completeData, start, end - start);
+                }
+
+                synthesisCallback.done();
                 CacheEntry cacheEntry = new CacheEntry();
                 cacheEntry.Text = text;
                 cacheEntry.ByteSize = completeData.length;
@@ -471,16 +482,10 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
             }
         } catch (MalformedURLException ex) {
             _Logger.severe("Malformed server url: " + ex.getMessage());
-            ex.printStackTrace();
             synthesisCallback.error();
             synthesisCallback.done();
         } catch (IOException ex) {
             _Logger.severe("Connection error: " + ex.getMessage());
-            ex.printStackTrace();
-            for (StackTraceElement el : ex.getStackTrace()) {
-                _Logger.warning("at " + el.toString());
-            }
-
             if(SpecialCache.containsKey("default_no_connection")) {
                 CacheEntry noConn = SpecialCache.get("default_no_connection");
                 File noConnFile = new File(Mimic3TTSEngineWrapperApp.getStorageContext().getCacheDir(), "default_no_connection");
@@ -489,7 +494,7 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
                         InputStream in = Files.newInputStream(noConnFile.toPath());
                         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
                         int nRead;
-                        byte[] data = new byte[16384];
+                        byte[] data = new byte[TextToSpeech.getMaxSpeechInputLength()];
                         _Logger.info("Got raw data");
                         while ((nRead = in.read(data, 0, data.length)) != -1) {
                             synthesisCallback.audioAvailable(data, 0, nRead);
@@ -544,7 +549,7 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
         try {
             InputStream in = new BufferedInputStream(Files.newInputStream(cacheFile.toPath()));
             int nRead;
-            byte[] data = new byte[16384];
+            byte[] data = new byte[TextToSpeech.getMaxSpeechInputLength()];
 
             _Logger.info("Got raw data");
             while ((nRead = in.read(data, 0, data.length)) != -1) {
@@ -817,6 +822,8 @@ public class Mimic3TTSEngineWeb extends TextToSpeechService {
     public void triggerLoadVoices() {
         FetchVoices = true;
     }
+
+    public void triggerSaveCache() { SaveCache = true; }
 
     public void clearCache(boolean clearSpecialCacheToo) {
         if(clearSpecialCacheToo)
