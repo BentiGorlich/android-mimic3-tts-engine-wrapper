@@ -6,6 +6,8 @@ by the gradle plugin `chaquopy`, which enables Android apps to use python packag
 
 ![Mimic3 Logo](https://github.com/MycroftAI/mimic3/raw/master/img/Mimic_color.svg) [Mimic3](https://github.com/MycroftAI/mimic3)
 
+Join us on matrix: https://matrix.to/#/#mimic3ttsenginewrapper-app:tchncs.de
+
 # Quickstart
 
 You need:
